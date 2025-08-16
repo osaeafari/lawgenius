@@ -1,0 +1,1 @@
+ /Users/kay/Desktop/csMsc/project-related/LawGenius/lawgenius/.dart_tool/flutter_build/a93ce3fa028099b81ba799840d35e1d9/native_assets.json: 

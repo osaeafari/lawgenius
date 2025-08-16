@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lawgenius/core/services/gemini_service.dart';
 import 'package:lawgenius/core/services/openai_services.dart';
 import 'package:lawgenius/models/chat_history_item.dart';
 import 'package:lawgenius/providers/chart_history_provider.dart';
@@ -46,36 +47,37 @@ class _ChatScreenState extends State<ChatScreen> {
     });
 
     try {
-      // 🔍 First classify the intent
       final intent = await ClassifierService.classifyQuestion(message);
-
-      if (intent == null) {
-        setState(() {
-          _messages.insert(
-            0,
-            ChatBubble(
-              text: 'Error: Could not classify the message',
-              isUser: false,
-            ),
-          );
-        });
-        return;
-      }
+      print('Classified as: $intent');
 
       String response;
 
-      // 🤖 Handle based on intent
-      if (intent == 'legal') {
-        response = await openAIService.sendMessage(message); // Use legal model
-      } else {
+      if (intent == null) {
+        // Fallback: use OpenAI
+        response = await openAIService.sendMessage(message);
+      } else if (intent == 'legal') {
+        final responses = await Future.wait([
+          openAIService.sendMessage(message),
+          GeminiService.sendMessage(message),
+          // MetaAIService.sendMessage(message), // Uncomment when ready
+        ]);
+
         response =
-            'This is a general message. We can add support for this later.';
+            '''
+              OpenAI: ${responses[0]}
+              Gemini: ${responses[1]}
+            ''';
+      } else {
+        // General intent → OpenAI only
+        response = await openAIService.sendMessage(message);
       }
 
+      // 💬 Display the assistant's response
       setState(() {
         _messages.insert(0, ChatBubble(text: response, isUser: false));
       });
 
+      // 📝 Save to history
       final historyProvider = Provider.of<ChatHistoryProvider>(
         context,
         listen: false,

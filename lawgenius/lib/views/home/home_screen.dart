@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lawgenius/core/constants/app_text_styles.dart';
+import 'package:lawgenius/core/services/api_service.dart';
 import 'package:lawgenius/widgets/scroll_cotainer.dart';
 import 'package:lawgenius/widgets/search_bar_widget.dart';
 import 'package:lawgenius/widgets/section_title_widget.dart';
@@ -13,6 +14,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _initBackendPing();
+  }
+
+  void _initBackendPing() async {
+    await ApiService.pingBackend();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
