@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lawgenius/core/services/openai_services.dart';
 import 'package:lawgenius/providers/chart_history_provider.dart';
 import 'package:lawgenius/routes/app_routes.dart';
 import 'package:lawgenius/core/constants/app_colors.dart';
@@ -17,6 +18,9 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider<ChatHistoryProvider>.value(
           value: chatHistoryProvider,
+        ),
+        Provider<OpenAIService>(
+          create: (_) => OpenAIService(), // <-- ADD THIS
         ),
       ],
       child: const LawGenius(),

@@ -7,6 +7,7 @@ class ScrollContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 570, // Constrain the height to enable internal scrolling
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 193, 185, 200).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
